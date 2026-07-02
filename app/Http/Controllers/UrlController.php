@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Infrastructure\Http\Controllers;
+namespace App\Http\Controllers;
 
 use App\Application\Url\Commands\CreateShortUrlCommand;
 use App\Application\Url\Handlers\CreateShortUrlHandler;

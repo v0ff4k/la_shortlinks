@@ -1,7 +1,7 @@
 <?php
 
-use App\Infrastructure\Http\Controllers\UrlController;
-//use App\Infrastructure\Http\Controllers\RedirectController;
+use App\Http\Controllers\UrlController;
+//use App\Http\Controllers\RedirectController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum', 'throttle:60,1'])
