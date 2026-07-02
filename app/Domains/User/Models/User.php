@@ -1,11 +1,12 @@
-<?php
+<?php // app/Domains/User/Models/User.php
 
-namespace App\Models;
+namespace App\Domains\User\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Domains\Url\Models\Url;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -24,9 +25,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'password' => 'hashed',
     ];
 
-    // Связь с URL
-    public function urls()
+    public function urls(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(\App\Domains\Url\Models\Url::class);
+        return $this->hasMany(Url::class);
     }
 }
