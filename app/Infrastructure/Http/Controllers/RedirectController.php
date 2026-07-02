@@ -3,7 +3,7 @@
 namespace App\Infrastructure\Http\Controllers;
 
 use App\Domains\Url\Events\UrlVisited;
-use App\Infrastructure\Persistence\Repositories\UrlRepositoryInterface;
+use App\Domains\Url\Repositories\UrlRepositoryInterface;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;

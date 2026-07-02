@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Infrastructure\Persistence\Repositories;
+namespace App\Domains\Url\Repositories;
 
 use App\Domains\Url\Models\Url;
 

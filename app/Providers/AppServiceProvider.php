@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Infrastructure\Persistence\Repositories\UrlRepository;
-use App\Infrastructure\Persistence\Repositories\UrlRepositoryInterface;
+use App\Domains\Url\Repositories\UrlRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
