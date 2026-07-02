@@ -1,6 +1,5 @@
 FROM php:8.2-fpm-alpine
 
-# Установка системных зависимостей, включая ICU для расширения 'intl'
 RUN apk add --no-cache \
     bash \
     curl \
@@ -8,13 +7,22 @@ RUN apk add --no-cache \
     libzip-dev \
     zip \
     unzip \
-    icu-dev # <-- Добавлено: ICU библиотеки
+    icu-dev \
+    freetype-dev \
+    libjpeg-turbo-dev \
+    libpng-dev \
+    libwebp-dev \
+    oniguruma-dev \
+    redis \
+    supervisor
 
-# Компиляция и установка PHP-расширений
-RUN docker-php-ext-install \
+RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg --with-webp \
+    && docker-php-ext-install \
     intl \
     pdo_mysql \
-    zip
+    zip \
+    gd \
+    mbstring
 
 # Установка Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -23,9 +31,23 @@ WORKDIR /var/www
 
 COPY . .
 
-# Установка зависимостей PHP
-# Используем --ignore-platform-reqs как временное решение для уязвимостей
-# ВНИМАНИЕ: Это снижает безопасность. В продакшене лучше обновить пакеты.
-RUN composer install --ignore-platform-reqs --no-dev --optimize-autoloader
+# Установка зависимостей PHP (без --ignore-platform-reqs)
+# This flag bypasses all platform requirement checks. The comment even acknowledges it "reduces security."
+# This must never be in a production image
+RUN composer install --no-dev --optimize-autoloader
 
-CMD ["php-fpm"]
+# Настройка supervisor
+COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Создание непривилегированного пользователя
+RUN addgroup -g 1000 -S www-data && \
+    adduser -u 1000 -S www-data -G www-data
+
+# Установка прав на директорию
+RUN chown -R www-data:www-data /var/www
+
+USER www-data
+
+EXPOSE 9000
+
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
