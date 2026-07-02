@@ -77,3 +77,52 @@
     │       └── Listeners/
     │           └── LogVisitListener.php
     └── ...
+
+---
+
+### Дополнение
+
+ - В папке database/ есть seeders.
+Используйте команды `php artisan db:seed` или `php artisan migrate:fresh --seed` для их запуска.
+
+ - Создать недостающие миддлвары:
+
+    php artisan make:middleware TrustProxies
+    php artisan make:middleware PreventRequestsDuringMaintenance
+    php artisan make:middleware TrimStrings
+    php artisan make:middleware EncryptCookies
+    php artisan make:middleware VerifyCsrfToken
+    php artisan make:middleware Authenticate
+    php artisan make:middleware RedirectIfAuthenticated
+    php artisan make:middleware ValidateSignature
+    
+Пример **TrustProxies.php**
+```php
+<?php
+
+namespace App\Http\Middleware;
+
+use Illuminate\Http\Middleware\TrustProxies as Middleware;
+use Illuminate\Http\Request;
+
+class TrustProxies extends Middleware
+{
+    protected $proxies;
+
+    protected $headers =
+        Request::HEADER_X_FORWARDED_FOR |
+        Request::HEADER_X_FORWARDED_HOST |
+        Request::HEADER_X_FORWARDED_PORT |
+        Request::HEADER_X_FORWARDED_PROTO |
+        Request::HEADER_X_FORWARDED_AWS_ELB;
+}
+```
+
+ - Префиксы можно сгенерировать автоматически с помощью `php artisan make:migration`
+ 
+ ---
+ ## TODO 
+ 
+ 1. Добавить и прогнать статический анализ phpstan|psalm итп как дойдут руки.
+ 2. Обкатать docker-compose как будет много времени
+ 3. Поправить безопастность в mysql докера
