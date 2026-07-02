@@ -31,68 +31,7 @@
         "platform-check": false,
         "allow-plugins": {
             "phpstan/extension-installer": true
-        },
-        "secure-http": true,
-        "process-timeout": 0,
-        "use-github-api": false,
-        "lock": false,
-        "platform": {
-            "php": "8.2.0"
-        },
-        "platform-overrides": {
-            "php": "8.2.0"
-        },
-        "notify-on-install": false,
-        "archive-format": "tar",
-        "archive-dir": ".",
-        "cache-read-only": false,
-        "discard-changes": false,
-        "autoloader-suffix": "",
-        "sort-packages": true,
-        "vendor-dir": "vendor",
-        "bin-dir": "bin",
-        "process-timeout": 300,
-        "use-include-path": false,
-        "preferred-install": {
-            "*": "dist"
-        },
-        "github-domains": [
-            "github.com"
-        ],
-        "gitlab-domains": [
-            "gitlab.com"
-        ],
-        "store-auths": "prompt",
-        "archive": {
-            "exclude": [
-                "/node_modules",
-                "/.git"
-            ]
-        },
-        "platform-check": false,
-        "secure-http": true,
-        "repositories": [],
-        "preferred-install": {
-            "*": "dist"
-        },
-        "sort-packages": true,
-        "vendor-dir": "vendor",
-        "bin-dir": "bin",
-        "process-timeout": 300,
-        "use-include-path": false,
-        "notify-on-install": false,
-        "discard-changes": false,
-        "lock": false,
-        "cache-read-only": false,
-        "platform-overrides": {
-            "php": "8.2.0"
-        },
-        "platform": {
-            "php": "8.2.0"
-        },
-        "optimize-autoloader": true,
-        "preferred-install": "dist",
-        "sort-packages": true
+        }
     },
     "scripts": {
         "post-autoload-dump": [
