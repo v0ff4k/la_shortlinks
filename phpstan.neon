@@ -1,0 +1,14 @@
+parameters:
+    level: 8 # максимальный уровень строгости
+    paths:
+        - app/
+        - database/factories/
+        - database/seeders/
+    excludePaths:
+        - database/migrations/*
+        - storage/*
+        - resources/views/*
+        - public/*
+
+    checkMissingIterableValueType: false
+    reportMaybesInMethodSignatures: false

@@ -1,0 +1,107 @@
+{
+    "name": "v0ff4k/la_shortlinks",
+    "type": "project",
+    "require": {
+        "php": "^8.2",
+        "ext-intl": "*",
+        "laravel/framework": "^10.0",
+        "laravel/sanctum": "^3.3",
+        "filament/filament": "^3.0",
+        "guzzlehttp/guzzle": "^7.2"
+    },
+    "require-dev": {
+        "fakerphp/faker": "^1.9.1",
+        "laravel/pint": "^1.0",
+        "mockery/mockery": "^1.4.4",
+        "phpstan/phpstan": "^1.10",
+        "phpstan/extension-installer": "^1.1",
+        "phpunit/phpunit": "^10.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "platform-check": false,
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        },
+        "secure-http": true,
+        "process-timeout": 0,
+        "use-github-api": false,
+        "lock": false,
+        "platform": {
+            "php": "8.2.0"
+        },
+        "platform-overrides": {
+            "php": "8.2.0"
+        },
+        "notify-on-install": false,
+        "archive-format": "tar",
+        "archive-dir": ".",
+        "cache-read-only": false,
+        "discard-changes": false,
+        "autoloader-suffix": "",
+        "sort-packages": true,
+        "vendor-dir": "vendor",
+        "bin-dir": "bin",
+        "process-timeout": 300,
+        "use-include-path": false,
+        "preferred-install": {
+            "*": "dist"
+        },
+        "github-domains": [
+            "github.com"
+        ],
+        "gitlab-domains": [
+            "gitlab.com"
+        ],
+        "store-auths": "prompt",
+        "archive": {
+            "exclude": [
+                "/node_modules",
+                "/.git"
+            ]
+        },
+        "platform-check": false,
+        "secure-http": true,
+        "repositories": [],
+        "preferred-install": {
+            "*": "dist"
+        },
+        "sort-packages": true,
+        "vendor-dir": "vendor",
+        "bin-dir": "bin",
+        "process-timeout": 300,
+        "use-include-path": false,
+        "notify-on-install": false,
+        "discard-changes": false,
+        "lock": false,
+        "cache-read-only": false,
+        "platform-overrides": {
+            "php": "8.2.0"
+        },
+        "platform": {
+            "php": "8.2.0"
+        },
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi"
+        ],
+        "post-update-cmd": [
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
+            "@php artisan filament:install --panels"
+        ]
+    }
+}
