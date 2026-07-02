@@ -3,7 +3,7 @@
 namespace App\Infrastructure\Events\Listeners;
 
 use App\Domains\Url\Events\UrlVisited;
-use App\Jobs\TrackVisitJob;
+use App\Infrastructure\Jobs\TrackVisitJob;
 
 class LogVisitListener
 {
