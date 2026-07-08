@@ -1,4 +1,7 @@
-<?php // database/factories/UrlVisitFactory.php
+<?php
+
+declare(strict_types=1);
+// database/factories/UrlVisitFactory.php
 
 namespace Database\Factories;
 

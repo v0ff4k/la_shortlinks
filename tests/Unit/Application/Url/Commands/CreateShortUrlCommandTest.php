@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Unit\Application\Url\Commands;
 
 use App\Application\Url\Commands\CreateShortUrlCommand;

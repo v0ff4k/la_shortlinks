@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Unit\Domains\Url\Events;
 
 use App\Domains\Url\Events\UrlVisited;

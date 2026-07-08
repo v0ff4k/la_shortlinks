@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Application\Analytics\DTOs;
 
 use App\Domains\Analytics\ValueObjects\IpAddress;

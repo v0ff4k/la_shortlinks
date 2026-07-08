@@ -10,5 +10,7 @@ parameters:
         - resources/views/*
         - public/*
 
-    checkMissingIterableValueType: false
+    ignoreErrors:
+        -
+            identifier: missingType.iterableValue
     reportMaybesInMethodSignatures: false

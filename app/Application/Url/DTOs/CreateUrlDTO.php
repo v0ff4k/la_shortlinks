@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Application\Url\DTOs;
 
 use App\Infrastructure\Http\Requests\CreateUrlRequest;
-use Illuminate\Support\Str;
 
 readonly class CreateUrlDTO
 {
@@ -15,15 +16,14 @@ readonly class CreateUrlDTO
     ) {}
 
     public static function fromRequest(CreateUrlRequest $request): self
-{
-    $alias = $request->input('custom_alias');
-    $code = $alias ?: Str::random(6);
+    {
+        $alias = $request->input('custom_alias');
 
-    return new self(
-        $request->user()?->id,
+        return new self(
+            $request->user()?->id,
             $request->input('original_url'),
             $alias,
-            $request->input('expires_at') ? new \DateTime($request->input('expires_at')) : null
+            $request->filled('expires_at') ? new \DateTime($request->input('expires_at')) : null
         );
     }
 }

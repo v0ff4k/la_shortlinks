@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Application\Url\Commands;
 
 use App\Application\Url\DTOs\CreateUrlDTO;

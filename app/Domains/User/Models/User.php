@@ -1,8 +1,12 @@
-<?php // app/Domains/User/Models/User.php
+<?php
+
+declare(strict_types=1);
+// app/Domains/User/Models/User.php
 
 namespace App\Domains\User\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -10,17 +14,16 @@ use App\Domains\Url\Models\Url;
 
 /**
  * Class User
- * @todo MustVerifyEmail is declared but there is no mail configuration, no verification routes beyond
- *     Auth::routes(['verify' => true]), and no queue worker to send emails.
- *     This will silently block all API access for unverified users.
- * Проблема остаётся частично. Для полноценной верификации нужно настроить Mail/Queue. Пока оставим интерфейс,
- *     но важно настроить очередь и отправку писем в прод-е.
+ * @todo MustVerifyEmail is declared, but mail and verification flow are not fully wired for production use.
+ *     Keep it in mind before enabling email verification in a real environment.
  *
  * @package App\Domains\User\Models
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, Notifiable;
+    use HasApiTokens;
+    use HasFactory;
+    use Notifiable;
 
     protected $fillable = [
         'name', 'email', 'password',

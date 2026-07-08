@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature;
 
-use App\Domains\Url\Models\Url;
+use App\Domains\User\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
@@ -13,7 +15,7 @@ class CreateUrlTest extends TestCase
 
     public function test_user_can_create_short_url(): void
     {
-        $user = \App\Models\User::factory()->create();
+        $user = User::factory()->create();
         Sanctum::actingAs($user, ['*']);
 
         $response = $this->postJson('/api/urls', [

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Domains\Url\Events\UrlVisited;
@@ -19,12 +21,19 @@ class RedirectController extends Controller
         $url = $this->repository->findByShortCode($code);
         abort_if(!$url || $url->isExpired(), 404);
 
-        // Анонимизация IP (GDPR)
-        $ip = $request->ip();
-        $anonIp = substr($ip, 0, strrpos($ip, '.') + 1) . '0'; // IPv4: 192.168.1.100 -> 192.168.1.0
+        $anonIp = $this->anonymizeIp((string) $request->ip());
 
         event(new UrlVisited($url->id, $anonIp));
 
         return redirect($url->original_url);
+    }
+
+    private function anonymizeIp(string $ip): string
+    {
+        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+            return preg_replace('/\.\d+$/', '.0', $ip);
+        }
+
+        return $ip;
     }
 }

@@ -36,26 +36,3 @@
 Большим плюсом будет реализация личного кабинета на базе админ-панели Filamentphp v3.
 
 Как задание будет сделано, вставьте ссылку на Github в поле ниже и нажмите "Далее".
-
-
- Недостаёт:
-
-    app/Models/User.php — Мы изменили его, но не создали целиком в списке файлов. Он нужен.
-    app/Providers/ — AppServiceProvider с биндингом репозитория реализован.
-    app/Http/Controllers/Auth/ — LoginController с throttle был описан, но не весь файл.
-    app/Http/Middleware/ — Нужны стандартные мидлвары (частично есть в Kernel.php, но могут быть отдельные файлы).
-    app/Console/Kernel.php — Для планирования задач (например, очистка просроченных ссылок).
-    app/Exceptions/Handler.php — Для централизованной обработки исключений (частично покрывается CreateShortUrlHandler, но всё равно нужен).
- 
-    
- Недостаёт:
- 
-    config/sanctum.php — Обязательно для работы Sanctum.
-    config/filament.php — Обязательно для работы Filament.
-    config/cache.php, config/database.php, config/filesystems.php, config/logging.php, config/mail.php, config/queue.php, config/session.php, config/view.php — Стандартные Laravel-файлы. Они обычно публикуются через php artisan config:cache и содержат дефолтные значения. Создавать их вручную не обязательно, если не переопределяешь поведение.
-    config/app.php — Содержит основные настройки приложения (имя, ключ, провайдеры и т.д.). Создавать вручную не обязательно, если не меняешь.
-    config/auth.php — Для настройки guard'ов, провайдеров. Sanctum обычно настраивается через sanctum.php.
-    config/hashing.php — Для настройки хеширования паролей.
-    config/broadcasting.php — Если используются вебсокеты.
-    config/services.php — Для настроек внешних сервисов (Mailgun, Stripe и т.д.).
-    config/sanctum.php (частично публикуется через artisan sanctum:install)

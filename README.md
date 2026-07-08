@@ -1,128 +1,68 @@
-# Laravel URL Shortener (Короткие ссылки)
+# Laravel URL Shortener
 
-Приложение на Laravel 10+, позволяющее пользователям создавать короткие ссылки, отслеживать переходы и управлять ими через панель администратора (Filament v3). Реализована аутентификация, создание URL, перенаправление с учётом посещений и статистика.
+Приложение на Laravel 12 и Filament 5 для создания коротких ссылок, отслеживания переходов и управления ими через админ-панель.
 
-## Установка
+## Что умеет
 
-1. Склонируйте репозиторий.
-2. Скопируйте `.env.example` в `.env` и настройте подключение к базе данных.
-3. Запустите миграции: `php artisan migrate`.
-4. (Опционально) Загрузите начальные данные: `php artisan db:seed`.
-5. Запустите сервер разработки: `php artisan serve`.
-6. Откройте приложение по адресу `http://127.0.0.1:8000`.
+- Создавать короткие ссылки с авто-генерацией кода или custom alias.
+- РедиректитЪ по короткой ссылке на оригинальный URL.
+- Сохранять статистику переходов с IP и временем визита.
+- Управлять ссылками через Filament admin.
 
-## Возможности
+## Быстрый старт
 
-- Регистрация и вход пользователей (Sanctum).
-- Создание коротких URL с автоматической генерацией кода.
-- Перенаправление с учётом посещений (IP-адрес, дата и время).
-- Панель управления для просмотра, редактирования, удаления URL и аналитики.
-- Встроенная страница статистики с количеством кликов и последними посещениями.
+1. Поднимите окружение.
+2. Примените миграции и seed.
+3. Откройте `http://127.0.0.1:28000/admin/login`.
+
+### Docker bootstrap
+
+Самый быстрый путь для чистого разворота:
+
+```bash
+sh docker/bootstrap.sh
+```
+
+Можно также использовать Composer-алиас:
+
+```bash
+composer bootstrap:docker
+```
+
+Скрипт:
+
+- поднимает контейнеры;
+- выполняет `php artisan migrate:fresh --seed --force`;
+- очищает кэш Laravel после миграций.
+
+## Тестовые аккаунты
+
+После `migrate:fresh --seed` доступны пользователи:
+
+- `admin@example.com` / `password`
+- `user@example.com` / `password`
+
+## Команды Laravel
+
+- `php artisan migrate`
+- `php artisan db:seed`
+- `php artisan migrate:fresh --seed`
+- `php artisan route:list`
+- `php artisan route:list --path=admin`
+- `php artisan config:clear`
+- `php artisan route:clear`
+- `php artisan cache:clear`
+- `php artisan key:generate --ansi`
+- `php artisan package:discover --ansi`
+- `composer test`
+
+## Качество кода
+
+- `composer analyse`
+- `composer format`
+- `composer format:test`
 
 ## Тестирование
 
-Запустите тесты с помощью команды `php artisan test`.
-
-## Развертывание
-
-Для продакшена настройте обработчик очередей, установите supervisor и включите кэширование. Подробнее см. в официальной документации Laravel.
-
-## Файловая структура (набросок)
-  
-    app/
-    ├── Domains/
-    │   ├── Url/
-    │   │   ├── Models/
-    │   │   │   └── Url.php
-    │   │   ├── ValueObjects/
-    │   │   │   ├── OriginalUrl.php
-    │   │   │   └── ShortCode.php
-    │   │   ├── Events/
-    │   │   │   └── UrlVisited.php
-    │   │   └── Exceptions/
-    │   │       └── InvalidUrlException.php
-    │   └── Analytics/
-    │       ├── Models/
-    │       │   └── UrlVisit.php
-    │       └── ValueObjects/
-    │           └── IpAddress.php
-    ├── Application/
-    │   ├── Url/
-    │   │   ├── Commands/
-    │   │   │   └── CreateShortUrlCommand.php
-    │   │   ├── Handlers/
-    │   │   │   └── CreateShortUrlHandler.php
-    │   │   ├── Queries/
-    │   │   │   └── GetUrlsQuery.php
-    │   │   └── DTOs/
-    │   │       └── CreateUrlDTO.php
-    │   └── Analytics/
-    │       ├── DTOs/
-    │       │   └── TrackVisitDTO.php
-    │       └── Handlers/
-    │           └── TrackVisitHandler.php
-    ├── Infrastructure/
-    │   ├── Persistence/
-    │   │   └── Repositories/
-    │   │       └── UrlRepository.php
-    │   ├── Http/
-    │   │   ├── Controllers/
-    │   │   │   ├── UrlController.php
-    │   │   │   └── RedirectController.php
-    │   │   ├── Requests/
-    │   │   │   └── CreateUrlRequest.php
-    │   │   └── Resources/
-    │   │       └── UrlResource.php
-    │   └── Events/
-    │       └── Listeners/
-    │           └── LogVisitListener.php
-    └── ...
-
----
-
-### Дополнение
-
- - В папке database/ есть seeders.
-Используйте команды `php artisan db:seed` или `php artisan migrate:fresh --seed` для их запуска.
-
- - Создать недостающие миддлвары:
-
-    php artisan make:middleware TrustProxies
-    php artisan make:middleware PreventRequestsDuringMaintenance
-    php artisan make:middleware TrimStrings
-    php artisan make:middleware EncryptCookies
-    php artisan make:middleware VerifyCsrfToken
-    php artisan make:middleware Authenticate
-    php artisan make:middleware RedirectIfAuthenticated
-    php artisan make:middleware ValidateSignature
-    
-Пример **TrustProxies.php**
-```php
-<?php
-
-namespace App\Http\Middleware;
-
-use Illuminate\Http\Middleware\TrustProxies as Middleware;
-use Illuminate\Http\Request;
-
-class TrustProxies extends Middleware
-{
-    protected $proxies;
-
-    protected $headers =
-        Request::HEADER_X_FORWARDED_FOR |
-        Request::HEADER_X_FORWARDED_HOST |
-        Request::HEADER_X_FORWARDED_PORT |
-        Request::HEADER_X_FORWARDED_PROTO |
-        Request::HEADER_X_FORWARDED_AWS_ELB;
-}
-```
-
- - Префиксы можно сгенерировать автоматически с помощью `php artisan make:migration`
- 
- ---
- ## TODO 
- 
- 1. Добавить и прогнать статический анализ phpstan|psalm итп как дойдут руки.
- 2. Обкатать docker-compose как будет много времени
- 3. Поправить безопастность в mysql докера
+Feature-тесты покрывают главную страницу и страницу входа в админку.
+Unit-тесты покрывают DTO, command, handler, job и доменную логику модели `Url`.

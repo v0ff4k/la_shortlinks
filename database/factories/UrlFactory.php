@@ -1,9 +1,12 @@
-<?php // database/factories/UrlFactory.php
+<?php
+
+declare(strict_types=1);
+// database/factories/UrlFactory.php
 
 namespace Database\Factories;
 
 use App\Domains\Url\Models\Url;
-use App\Models\User; // Предполагаем связь с пользователем
+use App\Domains\User\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -35,7 +38,7 @@ class UrlFactory extends Factory
      */
     public function withCustomAlias(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'custom_alias' => fake()->unique()->lexify('???-???'),
             'short_code' => fake()->unique()->lexify('???-???'), // Убедимся, что short_code тоже уникален, если alias задан
         ]);
@@ -46,7 +49,7 @@ class UrlFactory extends Factory
      */
     public function withExpiration(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'expires_at' => fake()->dateTimeBetween('+1 month', '+1 year'),
         ]);
     }

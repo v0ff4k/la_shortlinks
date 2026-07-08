@@ -4,24 +4,30 @@
     "require": {
         "php": "^8.2",
         "ext-intl": "*",
-        "laravel/framework": "^10.0",
-        "laravel/sanctum": "^3.3",
-        "filament/filament": "^3.0",
-        "guzzlehttp/guzzle": "^7.2"
+        "laravel/framework": "^12.62",
+        "laravel/sanctum": "^4",
+        "filament/filament": "^5",
+        "guzzlehttp/guzzle": "^7"
     },
     "require-dev": {
-        "fakerphp/faker": "^1.9.1",
-        "laravel/pint": "^1.0",
-        "mockery/mockery": "^1.4.4",
-        "phpstan/phpstan": "^1.10",
-        "phpstan/extension-installer": "^1.1",
-        "phpunit/phpunit": "^10.1"
+        "fakerphp/faker": "^1.9",
+        "laravel/pint": "^1.29",
+        "mockery/mockery": "^1.6",
+        "phpstan/phpstan": "^1.12",
+        "friendsofphp/php-cs-fixer": "^3.95",
+        "phpstan/extension-installer": "^1.4",
+        "phpunit/phpunit": "^10.5"
     },
     "autoload": {
         "psr-4": {
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
         }
     },
     "config": {
@@ -34,13 +40,21 @@
         }
     },
     "scripts": {
+        "bootstrap:docker": "sh docker/bootstrap.sh",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
+            "@php artisan package:discover --ansi",
+            "@php artisan filament:upgrade"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
             "@php artisan filament:install --panels"
-        ]
+        ],
+        "cs": "vendor/bin/php-cs-fixer fix --dry-run --diff",
+        "cs-fix": "vendor/bin/php-cs-fixer fix",
+        "analyse": "@php vendor/bin/phpstan analyse",
+        "format": "@php vendor/bin/pint",
+        "format:test": "@php vendor/bin/pint --test",
+        "test": "@php vendor/bin/phpunit"
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Unit\Domains\Url\ValueObjects;
 
 use App\Domains\Url\ValueObjects\OriginalUrl;

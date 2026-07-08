@@ -1,10 +1,12 @@
-<?php // database/seeders/UserSeeder.php
+<?php
+
+declare(strict_types=1);
+// database/seeders/UserSeeder.php
 
 namespace Database\Seeders;
 
-use App\Models\User;
+use App\Domains\User\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 /**
  * Class UserSeeder
@@ -18,23 +20,16 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // Создаем администратора
-        User::factory()->create([
+        User::firstOrCreate(['email' => 'admin@example.com'], [
             'name' => 'Admin User',
-            'email' => 'admin@example.com',
-            'password' => Hash::make('secret_password_here'), // Не забудьте изменить!
+            'password' => 'password',
             'email_verified_at' => now(),
         ]);
 
-        // Создаем обычного пользователя
-        User::factory()->create([
-            'name' => 'John Doe',
-            'email' => 'john@example.com',
-            'password' => Hash::make('password'),
+        User::firstOrCreate(['email' => 'user@example.com'], [
+            'name' => 'Test User',
+            'password' => 'password',
             'email_verified_at' => now(),
         ]);
-
-        // Или создаем несколько случайных пользователей через фабрику
-        User::factory()->count(5)->create(); // Создаст 5 пользователей с данными из фабрики
     }
 }
