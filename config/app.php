@@ -20,7 +20,7 @@ return [
     'maintenance' => ['driver' => 'file'],
 
     'providers' => ServiceProvider::defaultProviders()->merge([
-        // Явно добавляем критические провайдеры, если defaultProviders() не срабатывает
+        // set critical providers, if defaultProviders() unwork
         \App\Providers\AppServiceProvider::class,
         \Illuminate\Foundation\Providers\FoundationServiceProvider::class,
         \Illuminate\Database\DatabaseServiceProvider::class,

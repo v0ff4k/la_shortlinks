@@ -5,16 +5,31 @@ declare(strict_types=1);
 namespace App\Filament\Resources;
 
 use App\Domains\Url\Models\Url;
+use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 use App\Filament\Resources\UrlFilamentResource\Pages;
+use App\Filament\Resources\UrlFilamentResource\RelationManagers\VisitsRelationManager;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
+use Filament\Infolists\Components\TextEntry;
 
 class UrlFilamentResource extends Resource
 {
     protected static ?string $model = Url::class;
+
+    public static function getRecordRouteKeyName(): string
+    {
+        return 'short_code';
+    }
 
     public static function getNavigationLabel(): string
     {
@@ -37,8 +52,30 @@ class UrlFilamentResource extends Resource
                     ->alphaDash()
                     ->minLength(3)
                     ->maxLength(50)
-                    ->unique(ignoreRecord: true)
-                    ->helperText('Leave empty to auto-generate'),
+                    ->rule(function ($attribute, $value, $fail): void {
+                        if (!$value) {
+                            return;
+                        }
+
+                        // Getting safe 'record' from the  Livewire context(safely)
+                        $record = request()->route('record');
+
+
+                        $query = Url::query()
+                            ->where(function ($q) use ($value): void {
+                                $q->where('short_code', $value)->orWhere('custom_alias', $value);
+                            });
+
+                        // Явная проверка типа устраняет ошибку getKey()
+                        if ($record instanceof Url) {
+                            $query->where('id', '!=', $record->getKey());
+                        }
+
+                        if ($query->exists()) {
+                            $fail("This alias conflicts with an existing short code or custom alias.");
+                        }
+                    })
+                    ->helperText('Must be unique across all short codes and aliases'),
 
                 Forms\Components\DateTimePicker::make('expires_at')
                     ->label('Expires At')
@@ -60,7 +97,9 @@ class UrlFilamentResource extends Resource
                 Tables\Columns\TextColumn::make('short_code')
                     ->label('Code')
                     ->badge()
-                    ->color('primary'),
+                    ->color('primary')
+                    ->copyable()
+                    ->copyMessage('Short code copied!'),
 
                 Tables\Columns\TextColumn::make('custom_alias')
                     ->label('Alias')
@@ -68,15 +107,15 @@ class UrlFilamentResource extends Resource
 
                 Tables\Columns\TextColumn::make('expires_at')
                     ->label('Expires')
-                    ->dateTime()
+                    ->dateTime('H:i:s d-m-y')
                     ->sortable()
                     ->placeholder('Never'),
 
                 Tables\Columns\TextColumn::make('visits_count')
                     ->label('Visits')
-                    ->counts('visits')
+//                    ->counts('visits')
                     ->sortable()
-                    ->numeric(thousandsSeparator: ','),
+                    ->numeric(thousandsSeparator: ' '),
             ])
             ->filters([
                 Tables\Filters\Filter::make('expired')
@@ -90,13 +129,32 @@ class UrlFilamentResource extends Resource
                     })),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Action::make('statistics')
+                    ->label('Stats')
+                    ->icon('heroicon-o-chart-bar')
+                    ->color('info')
+                    ->url(fn($record): string => UrlFilamentResource::getUrl('stats', ['record' => $record->short_code])),
+                ViewAction::make()
+                    ->modalHeading('Link Details')
+                    ->modalWidth('3xl')
+                    ->infolist([
+                        Section::make('Link Information')
+                            ->schema([
+                                TextEntry::make('original_url')->label('Original URL')->copyable()->columnSpanFull(),
+                                TextEntry::make('short_code')->label('Short Code')->badge()->color('primary'),
+                                TextEntry::make('custom_alias')->label('Alias')->placeholder('—'),
+                                TextEntry::make('visits_count')->label('Total Visits')->numeric(thousandsSeparator: ' '),
+                                TextEntry::make('expires_at')->label('Expires')->dateTime('H:i:s d-m-y')->placeholder('Never'),
+                                TextEntry::make('created_at')->label('Created')->dateTime('H:i:s d-m-y'),
+                            ])
+                            ->columns(2),
+                    ]),
+                EditAction::make(),
+                DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ])
             ->defaultSort('created_at', 'desc')
@@ -108,7 +166,15 @@ class UrlFilamentResource extends Resource
         return [
             'index' => Pages\ListUrls::route('/'),
             'create' => Pages\CreateUrl::route('/create'),
-            'edit' => Pages\EditUrl::route('/{record}/edit'),
+            'edit' => Pages\EditUrl::route('/{record:short_code}/edit'),
+            'stats' => Pages\ViewUrlStats::route('/{record:short_code}/stats'),
         ];
     }
+
+    //    public static function getRelations(): array
+    //    {
+    //        return [
+    //            VisitsRelationManager::class,
+    //        ];
+    //    }
 }

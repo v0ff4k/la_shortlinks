@@ -1,7 +1,8 @@
 <?php
 
 declare(strict_types=1);
-// Пример, фактический файл генерируется автоматически
+
+// just an example, real file generated on the fly.
 return [
     'panels' => [
         'path' => 'admin',

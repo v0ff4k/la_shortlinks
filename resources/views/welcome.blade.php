@@ -60,9 +60,7 @@
         }
 
         .topbar {
-            display: flex;
             align-items: center;
-            justify-content: space-between;
             gap: 16px;
             margin-bottom: 56px;
         }
@@ -157,8 +155,7 @@
         }
 
         .eyebrow {
-            display: inline-flex;
-            align-items: center;
+            float: right;
             gap: 8px;
             padding: 8px 14px;
             border-radius: 999px;
@@ -242,8 +239,6 @@
         }
 
         .credential {
-            display: flex;
-            justify-content: space-between;
             align-items: center;
             gap: 12px;
             padding: 14px 16px;
@@ -269,12 +264,29 @@
         }
 
         .mini-row {
-            display: flex;
-            justify-content: space-between;
             gap: 16px;
             align-items: center;
             color: var(--muted);
             font-size: 0.95rem;
+        }
+
+        .top-links {
+            display:flex;
+            gap:12px;
+            flex-wrap:wrap;
+        }
+
+        .flex-space-bw {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .w-75-a {
+            width: 75%;
+            margin: auto;
+        }
+        .w-100 {
+            width: 100%;
         }
 
         .badge {
@@ -314,7 +326,7 @@
 <main class="shell">
     <div class="noise"></div>
     <div class="container">
-        <header class="topbar">
+        <header class="topbar flex-space-bw">
             <a class="brand" href="{{ url('/') }}">
                 <span class="mark" aria-hidden="true"></span>
                 <span>
@@ -323,9 +335,10 @@
                 </span>
             </a>
 
-            <div style="display:flex; gap:12px; flex-wrap:wrap;">
-                <a class="button secondary" href="{{ url('/test') }}">Smoke test</a>
+            <div class="top-links">
+                @if(app()->environment('local', 'staging'))<a class="button secondary" href="{{ url('/test') }}">Smoke test</a>@endif
                 <a class="button primary" href="{{ url('/admin/login') }}">Open admin</a>
+                <a class="button secondary" href="{{ url('/admin') }}">Open dashboard</a>
             </div>
         </header>
 
@@ -343,9 +356,39 @@
                 </p>
 
                 <div class="actions">
-                    <a class="button primary" href="{{ url('/admin/login') }}">Go to admin login</a>
+                    @guest
+                    <!-- Visible only to guests -->
+                    <a class="button primary" href="{{ url('/admin/register') }}">Register</a>
+                    <a class="button primary" href="{{ url('/admin/login') }}">Go to login</a>
+                    @else
+                    <!-- Visible only to logged-in users -->
                     <a class="button secondary" href="{{ url('/admin') }}">Open dashboard</a>
+                    @endguest
                 </div>
+
+
+                @auth
+                <!-- Visible only to logged-in users -->
+                <br /><br /><br />
+                    @if(session('short_url'))
+                    <div class="success">Ваша ссылка: {{ session('short_url') }}</div>
+                    @else
+                        <p>Welcome, <b>{{ auth()->user()->name }}</b> you can shorten url below</p>
+                        <div class="side-card">
+                            <div class="credential mini-row flex-space-bw">
+                                <form action="{{ url('/urls') }}" method="POST" class="flex-space-bw w-100">
+                                    @csrf
+                                    <input class="side-card w-75-a" type="url" name="original_url" required placeholder="https://example.com/page" />
+                                    <button class="button secondary badge" type="submit">Shorten</button>
+                                </form>
+                            </div>
+                        </div>
+                    @endif
+
+                @else
+                <!-- Visible only to guests -->
+                <p> After successful log-in you can shorten links here!</p>
+                @endauth
 
                 <div class="meta-grid">
                     <div class="meta">
@@ -363,15 +406,16 @@
                 </div>
             </div>
 
+            @if(app()->environment('local', 'staging'))
             <aside class="panel side">
                 <div class="side-card">
                     <h2>Bootstrap accounts</h2>
                     <div class="stack">
-                        <div class="credential">
+                        <div class="credential flex-space-bw">
                             <code>admin@example.com</code>
                             <small>password</small>
                         </div>
-                        <div class="credential">
+                        <div class="credential flex-space-bw">
                             <code>user@example.com</code>
                             <small>password</small>
                         </div>
@@ -380,20 +424,21 @@
 
                 <div class="side-card mini">
                     <h2>Quick status</h2>
-                    <div class="mini-row">
+                    <div class="mini-row flex-space-bw">
                         <span>Admin route</span>
-                        <span class="badge">/admin/login</span>
+                        <span class="badge">{{ url('/admin/login') }}</span>
                     </div>
-                    <div class="mini-row">
+                    <div class="mini-row flex-space-bw">
                         <span>Panel name</span>
                         <span class="badge">filament.admin</span>
                     </div>
-                    <div class="mini-row">
+                    <div class="mini-row flex-space-bw">
                         <span>Database</span>
                         <span class="badge">mysql</span>
                     </div>
                 </div>
             </aside>
+            @endif
         </section>
     </div>
 </main>

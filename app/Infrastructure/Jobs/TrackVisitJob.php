@@ -19,6 +19,8 @@ class TrackVisitJob implements ShouldQueue
     use SerializesModels;
 
     public int $tries = 3;
+
+    /** @var array<int, int> */
     public array $backoff = [1, 5, 10];
 
     public function __construct(
@@ -40,7 +42,9 @@ class TrackVisitJob implements ShouldQueue
     private function anonymizeIp(string $ip): string
     {
         if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-            return preg_replace('/\.\d+$/', '.0', $ip);
+            $result = preg_replace('/\.\d+$/', '.0', $ip);
+
+            return is_string($result) ? $result : $ip;
         }
 
         return $ip;
@@ -48,7 +52,7 @@ class TrackVisitJob implements ShouldQueue
 
     public function failed(\Throwable $exception): void
     {
-        \Log::error('TrackVisitJob failed.', [
+        \Illuminate\Support\Facades\Log::error('TrackVisitJob failed.', [
             'url_id' => $this->urlId,
             'ip' => $this->ip,
             'error' => $exception->getMessage(),

@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-namespace App\Domains\Analytics\Models;
+namespace App\Domains\Url\Models;
 
-use App\Domains\Url\Models\Url;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -18,14 +16,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class UrlVisit extends Model
 {
-    /** @use HasFactory<\Illuminate\Database\Eloquent\Factories\Factory<self>> */
-    use HasFactory;// or without phpAnnotation, Larastan will understood it.
-
     public $timestamps = false;
 
-    protected $fillable = ['url_id', 'ip_address', 'visited_at'];
+    protected $fillable = [
+        'url_id',
+        'ip_address',
+        'visited_at',
+    ];
 
-    protected $casts = ['visited_at' => 'datetime'];
+    protected $casts = [
+        'visited_at' => 'datetime',
+    ];
 
     /** @return BelongsTo<Url, $this> */
     public function url(): BelongsTo

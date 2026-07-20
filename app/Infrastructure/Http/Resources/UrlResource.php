@@ -7,8 +7,17 @@ namespace App\Infrastructure\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property-read int $id
+ * @property-read string $original_url
+ * @property-read string $short_code
+ * @property-read \Carbon\Carbon $created_at
+ */
 class UrlResource extends JsonResource
 {
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(Request $request): array
     {
         return [

@@ -14,6 +14,10 @@ class UrlRepository implements UrlRepositoryInterface
         return Url::where('short_code', $code)->orWhere('custom_alias', $code)->first();
     }
 
+    /**
+     * @param array<string, mixed> $data
+     * @return \App\Domains\Url\Models\Url
+     */
     public function create(array $data): Url
     {
         return Url::create($data);

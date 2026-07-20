@@ -13,6 +13,9 @@ class CreateUrlRequest extends FormRequest
         return true;
     }
 
+    /**
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
     public function rules(): array
     {
         return [
@@ -22,6 +25,9 @@ class CreateUrlRequest extends FormRequest
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function validatedWithMessages(): array
     {
         return [

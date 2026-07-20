@@ -21,6 +21,7 @@ class RedirectController extends Controller
         $url = $this->repository->findByShortCode($code);
         abort_if(!$url || $url->isExpired(), 404);
 
+        // anonymizing IP (GDPR)
         $anonIp = $this->anonymizeIp((string) $request->ip());
 
         event(new UrlVisited($url->id, $anonIp));
@@ -31,7 +32,8 @@ class RedirectController extends Controller
     private function anonymizeIp(string $ip): string
     {
         if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-            return preg_replace('/\.\d+$/', '.0', $ip);
+            $result = preg_replace('/\.\d+$/', '.0', $ip);
+            return is_string($result) ? $result : $ip;
         }
 
         return $ip;

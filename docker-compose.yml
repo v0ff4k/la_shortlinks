@@ -7,6 +7,8 @@ services:
       dockerfile: Dockerfile
     container_name: ls_sl-php
     working_dir: /var/www
+    env_file:
+      - .env
     volumes:
       - .:/var/www:rw
     depends_on:

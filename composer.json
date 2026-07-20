@@ -10,12 +10,14 @@
         "guzzlehttp/guzzle": "^7"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^4.4",
         "fakerphp/faker": "^1.9",
+        "friendsofphp/php-cs-fixer": "^3.95",
+        "larastan/larastan": "^3.10",
         "laravel/pint": "^1.29",
         "mockery/mockery": "^1.6",
-        "phpstan/phpstan": "^1.12",
-        "friendsofphp/php-cs-fixer": "^3.95",
         "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan": "^2.2",
         "phpunit/phpunit": "^10.5"
     },
     "autoload": {
@@ -40,15 +42,14 @@
         }
     },
     "scripts": {
-        "bootstrap:docker": "sh docker/bootstrap.sh",
+        "bootstrap:docker": "sh bootstrap.sh",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi",
             "@php artisan filament:upgrade"
         ],
         "post-update-cmd": [
-            "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
-            "@php artisan filament:install --panels"
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
         ],
         "cs": "vendor/bin/php-cs-fixer fix --dry-run --diff",
         "cs-fix": "vendor/bin/php-cs-fixer fix",

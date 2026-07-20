@@ -40,7 +40,7 @@ class UrlFactory extends Factory
     {
         return $this->state(fn(array $attributes) => [
             'custom_alias' => fake()->unique()->lexify('???-???'),
-            'short_code' => fake()->unique()->lexify('???-???'), // Убедимся, что short_code тоже уникален, если alias задан
+            'short_code' => fake()->unique()->lexify('???-???'), //  short_code uniq, if alias created
         ]);
     }
 

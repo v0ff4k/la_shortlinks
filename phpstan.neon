@@ -1,5 +1,5 @@
 parameters:
-    level: 8 # максимальный уровень строгости
+    level: 8 # we goin too strictly )
     paths:
         - app/
         - database/factories/
@@ -10,7 +10,12 @@ parameters:
         - resources/views/*
         - public/*
 
-    ignoreErrors:
-        -
-            identifier: missingType.iterableValue
+    # remove ignore iterableValue, bette fix types/return types
+    ignoreErrors: []
+
     reportMaybesInMethodSignatures: false
+
+    # Helping PHPStan with dynamic types from Eloquent
+    universalObjectCratesClasses:
+        - Illuminate\Http\Request
+        - Illuminate\Support\Optional
